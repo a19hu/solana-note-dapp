@@ -6,13 +6,16 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-solana_notes_dapp = "5yWh4mptkn4K45VxnxrSRmAQnRsb9WxwzKcrifMzTju3"
+solana_notes_dapp = "Bo6Z3yei5FU9NXUDwDMAQP7S2Zh6RNxquYj3wRojZPG"
+
+[programs.devnet]
+solana_notes_dapp = "Bo6Z3yei5FU9NXUDwDMAQP7S2Zh6RNxquYj3wRojZPG"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

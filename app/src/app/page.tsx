@@ -5,122 +5,122 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import { useEffect, useState } from "react";
 
-const PROGRAM_ID = new PublicKey("H1kLBGoiL3iTQsr7eRPQvb8ChsYfLkV2azPBFFixTGij");
+const PROGRAM_ID = new PublicKey("Bo6Z3yei5FU9NXUDwDMAQP7S2Zh6RNxquYj3wRojZPG");
 
 const IDL = {
-    "version": "0.1.0",
-    "name": "notes_dapp",
-    "instructions": [
+  "version": "0.1.0",
+  "name": "notes_dapp",
+  "instructions": [
+    {
+      "name": "createNote",
+      "accounts": [
         {
-            "name": "createNote",
-            "accounts": [
-                {
-                    "name": "note",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "author",
-                    "isMut": true,
-                    "isSigner": true
-                },
-                {
-                    "name": "systemProgram",
-                    "isMut": false,
-                    "isSigner": false
-                }
-            ],
-            "args": [
-                {
-                    "name": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "content",
-                    "type": "string"
-                }
-            ]
+          "name": "note",
+          "isMut": true,
+          "isSigner": false
         },
         {
-            "name": "updateNote",
-            "accounts": [
-                {
-                    "name": "note",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "author",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "content",
-                    "type": "string"
-                }
-            ]
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
         },
         {
-            "name": "deleteNote",
-            "accounts": [
-                {
-                    "name": "note",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "author",
-                    "isMut": true,
-                    "isSigner": true
-                }
-            ],
-            "args": []
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-    ],
-    "accounts": [
+      ],
+      "args": [
         {
-            "name": "Note",
-            "type": {
-                "kind": "struct",
-                "fields": [
-                    {
-                        "name": "author",
-                        "type": "publicKey"
-                    },
-                    {
-                        "name": "title",
-                        "type": "string"
-                    },
-                    {
-                        "name": "content",
-                        "type": "string"
-                    },
-                    {
-                        "name": "createAt",
-                        "type": "i64"
-                    },
-                    {
-                        "name": "lastUpdated",
-                        "type": "i64"
-                    }
-                ]
-            }
-        }
-    ],
-    "errors": [
-        {
-            "code": 6000,
-            "name": "TitleToolong",
-            "msg": "Title cannot be longer than 100 chars"
+          "name": "title",
+          "type": "string"
         },
         {
-            "code": 6001,
-            "name": "ContentToolong",
-            "msg": "content cannot be longer than 1000 chars"
+          "name": "content",
+          "type": "string"
         }
-    ]
+      ]
+    },
+    {
+      "name": "updateNote",
+      "accounts": [
+        {
+          "name": "note",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "author",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "deleteNote",
+      "accounts": [
+        {
+          "name": "note",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Note",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "createAt",
+            "type": "i64"
+          },
+          {
+            "name": "lastUpdated",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TitleToolong",
+      "msg": "Title cannot be longer than 100 chars"
+    },
+    {
+      "code": 6001,
+      "name": "ContentToolong",
+      "msg": "content cannot be longer than 1000 chars"
+    }
+  ]
 };
 
 export default function Home() {
@@ -129,6 +129,11 @@ export default function Home() {
 
   /*eslint-disable-next-line @typescript-eslint/no-explicit-any*/
   const [notes, setNotes] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
@@ -302,6 +307,8 @@ export default function Home() {
     }
   }, [wallet.connected]);
 
+  if (!mounted) return null;
+
   if (!wallet.connected) {
     return (
       <div className="flex flex-col items-center justify-center p-8  border border-slate-200 rounded-xl shadow-sm">
@@ -384,11 +391,10 @@ export default function Home() {
     <div className="text-gray-700">
       {message && (
         <div
-          className={`p-3 mb-5 rounded-lg border ${
-            message.includes("✅")
-              ? "bg-green-100 border-green-300 text-green-800"
-              : "bg-red-100 border-red-300 text-red-800"
-          }`}
+          className={`p-3 mb-5 rounded-lg border ${message.includes("✅")
+            ? "bg-green-100 border-green-300 text-green-800"
+            : "bg-red-100 border-red-300 text-red-800"
+            }`}
         >
           {message}
         </div>

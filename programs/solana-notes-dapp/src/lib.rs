@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 // This is your program's public key and it will update
 // automatically when you build the project.
-declare_id!("5yWh4mptkn4K45VxnxrSRmAQnRsb9WxwzKcrifMzTju3");
+declare_id!("Bo6Z3yei5FU9NXUDwDMAQP7S2Zh6RNxquYj3wRojZPG");
 
 #[program]
 pub mod notes_dapp {
